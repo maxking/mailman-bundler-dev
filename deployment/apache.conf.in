@@ -1,0 +1,28 @@
+# Here, use the value of the STATIC_ROOT variable in your Django configuration file (production.py)
+Alias /robots.txt  /var/spool/mailman-web/static/hyperkitty/robots.txt
+Alias /favicon.ico /var/spool/mailman-web/static/hyperkitty/favicon.ico
+Alias /static      /var/spool/mailman-web/static
+<Directory "/var/spool/mailman-web/static">
+    Order deny,allow
+    Allow from all
+    Require all granted
+</Directory>
+
+#ErrorLog /var/log/httpd/mailman-web_error.log
+#CustomLog /var/log/httpd/mailman-web_access.log combined
+
+WSGIScriptAlias / ${buildout:bin-directory}/${mailman-web:wsgi-script}
+WSGIDaemonProcess mailman-web display-name=mailman-web maximum-requests=1000 processes=4 threads=4 python-path=${venv-sitelib-directory}
+WSGISocketPrefix run/wsgi
+WSGIRestrictStdout On
+WSGIRestrictSignal Off
+WSGIPythonOptimize 1
+
+<Directory "${buildout:bin-directory}">
+    <Files ${mailman-web:wsgi-script}>
+        Order deny,allow
+        Allow from all
+        Require all granted
+    </Files>
+    WSGIProcessGroup mailman-web
+</Directory>

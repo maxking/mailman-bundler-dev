@@ -1,0 +1,26 @@
+# It's not recommended to modify this file in-place, because it will be
+# overwritten during package upgrades.  If you want to customize, the
+# best way is to create a file
+# "/etc/systemd/system/mailman-web-gunicorn.service",
+# containing
+#       .include /usr/lib/systemd/system/mailman-web-gunicorn.service
+#       ...make your changes here...
+# For more info about custom unit files, see
+# http://fedoraproject.org/wiki/Systemd#How_do_I_customize_a_unit_file.2F_add_a_custom_unit_file.3F
+
+
+[Unit]
+Description=GNU Mailman web interfaces
+After=syslog.target network.target
+
+[Service]
+Type=forking
+PIDFile=${buildout:directory}/var/mailman-web-gunicorn.pid
+WorkingDirectory=${buildout:directory}
+ExecStart=${buildout:bin-directory}/gunicorn -p ${buildout:directory}/var/mailman-web-gunicorn.pid- -n mailman-web mailman_web.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+# Change to a different user (and group) here
+User=apache
+#Group=apache

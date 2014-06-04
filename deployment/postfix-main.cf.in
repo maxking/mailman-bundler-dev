@@ -1,0 +1,11 @@
+# Support the default VERP delimiter.
+recipient_delimiter = +
+unknown_local_recipient_reject_code = 550
+owner_request_special = no
+# Maps
+transport_maps =
+    hash:${buildout:directory}/var/data/postfix_lmtp
+local_recipient_maps =
+    hash:${buildout:directory}/var/data/postfix_lmtp
+relay_domains =
+    hash:${buildout:directory}/var/data/postfix_domains

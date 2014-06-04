@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+BINDIR="${buildout:bin-directory}"
+CONFDIR="${buildout:directory}/${mailman-web:project}"
+SETTINGS="${mailman-web:settings}"
+DJANGO_CONTROL_SCRIPT="$BINDIR/${mailman-web:control-script}"
+export DJANGO_SETTINGS_MODULE="mailman_web.$SETTINGS"
+STATIC_DIR=`"$BINDIR/django-read-settings" STATIC_ROOT`
+KS_DIR=$(dirname $("$BINDIR/django-read-settings" KITTYSTORE_SEARCH_INDEX))
+
+set -x
+
+mkdir -p "$STATIC_DIR" || :
+"$DJANGO_CONTROL_SCRIPT" collectstatic --clear --noinput
+"$DJANGO_CONTROL_SCRIPT" assets build --parse-templates
+"$DJANGO_CONTROL_SCRIPT" syncdb --migrate
+mkdir -p "$KS_DIR" || :
+"$BINDIR/kittystore-updatedb" --pythonpath "$CONFDIR" --settings $SETTINGS
+[ ! -f /usr/sbin/postmap ] || "$BINDIR/mailman" aliases

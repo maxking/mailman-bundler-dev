@@ -1,0 +1,25 @@
+# This is the absolute bare minimum base configuration file.  User supplied
+# configurations are pushed onto this.
+
+[mailman]
+# This address is the "site owner" address.  Certain messages which must be
+# delivered to a human, but which can't be delivered to a list owner (e.g. a
+# bounce from a list owner), will be sent to this address.  It should point to
+# a human.
+site_owner: root@localhost
+
+[paths.dev]
+# Everything in the same directory
+var_dir: ${buildout:directory}/var
+
+#[database]
+#class: mailman.database.postgresql.PostgreSQLDatabase
+#url: postgres://mailman:mailman-db-password@localhost/mailman
+
+[archiver.hyperkitty]
+class: hyperkitty.archiver.Archiver
+enable: yes
+configuration: ${buildout:directory}/deployment/mailman-hyperkitty.cfg
+
+[archiver.prototype]
+enable: yes
