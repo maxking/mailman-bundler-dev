@@ -1,0 +1,11 @@
+mailman-bundler-dev
+===================
+
+This is a bundler to setup the development environment for
+the mailman-suite. It downloads all the projects from their
+source trunks and everything is setup for development. Details
+to follow soon here.
+
+
+**Note** : This project is yet to catch up with the recent changes
+in the mailman project.
